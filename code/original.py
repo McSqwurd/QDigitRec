@@ -41,7 +41,6 @@ X_train = X_train / 255.
 _,m_train = X_train.shape
 
 
-
 # Neural Net
 def init_params():
     W1 = np.random.rand(10, 784) - 0.5
