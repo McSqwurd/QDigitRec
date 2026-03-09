@@ -4,34 +4,15 @@ from matplotlib import pyplot as plt
 
 data = pd.read_csv('../data/train.csv')
 #print(data)
-
-print("Data")
 data = np.array(data)
-print(data)
-
-
 
 m, n = data.shape
 np.random.shuffle(data) # shuffle before splitting into dev and training sets
-print(m)
-print(n)
 
-print("data_dev")
-data_dev = data[0:1000].T
-print(data_dev)   # len 785
-
-print("Y_dev")
+data_dev = data[0:1000].T   # len 785
 Y_dev = data_dev[0]
-print(Y_dev)
-
-print("X-DEV1")
 X_dev = data_dev[1:n]
-print(X_dev)
-
-print("X-Dev2")
 X_dev = X_dev / 255.
-print(X_dev)
-
 
 
 data_train = data[1000:m].T
@@ -41,6 +22,7 @@ X_train = X_train / 255.
 _,m_train = X_train.shape
 
 
+
 # Neural Net
 def init_params():
     W1 = np.random.rand(10, 784) - 0.5
@@ -48,6 +30,9 @@ def init_params():
     W2 = np.random.rand(10, 10) - 0.5
     b2 = np.random.rand(10, 1) - 0.5
     return W1, b1, W2, b2
+print("init params")
+print(init_params())
+
 
 def ReLU(Z):
     return np.maximum(Z, 0)
@@ -63,8 +48,9 @@ def forward_prop(W1, b1, W2, b2, X):
     A2 = softmax(Z2)
     return Z1, A1, Z2, A2
 
-def ReLU_deriv(Z):
+def ReLU_deriv(Z):    # Z = array
     return Z > 0
+
 
 def one_hot(Y):
     one_hot_Y = np.zeros((Y.size, Y.max() + 1))
@@ -115,7 +101,7 @@ def gradient_descent(X, Y, alpha, iterations):
     return W1, b1, W2, b2
 
 
-# W1, b1, W2, b2 = gradient_descent(X_train, Y_train, 0.10, 500)
+W1, b1, W2, b2 = gradient_descent(X_train, Y_train, 0.10, 500)
 
 
 
