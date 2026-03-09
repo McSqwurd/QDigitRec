@@ -4,5 +4,14 @@ from matplotlib import pyplot as plt
 
 
 
+def f(l):
+    return l > 1
+
+
+
+
+print(f([1,2,3,4,5]))
+
+
 
 
