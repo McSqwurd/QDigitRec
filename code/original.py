@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+import time
 
 data = pd.read_csv('../data/train.csv')
-#print(data)
 data = np.array(data)
 
 m, n = data.shape
@@ -20,8 +20,6 @@ Y_train = data_train[0]
 X_train = data_train[1:n]
 X_train = X_train / 255.
 _,m_train = X_train.shape
-
-
 
 # Neural Net
 def init_params():
@@ -51,7 +49,6 @@ def forward_prop(W1, b1, W2, b2, X):
 def ReLU_deriv(Z):    # Z = array
     return Z > 0
 
-
 def one_hot(Y):
     one_hot_Y = np.zeros((Y.size, Y.max() + 1))
     one_hot_Y[np.arange(Y.size), Y] = 1
@@ -62,7 +59,7 @@ def backward_prop(Z1, A1, Z2, A2, W1, W2, X, Y):
     one_hot_Y = one_hot(Y)
     dZ2 = A2 - one_hot_Y
     dW2 = 1 / m * dZ2.dot(A1.T)
-    db2 = 1 / m * np.sum(dZ2)
+    db2 = 1 / m * np.sum(dZ2)           # possibly better -> db = 1 / m * np.sum(dZ, axis=1).reshape(-1, 1) was able to get me better results
     dZ1 = W2.T.dot(dZ2) * ReLU_deriv(Z1)
     dW1 = 1 / m * dZ1.dot(X.T)
     db1 = 1 / m * np.sum(dZ1)
@@ -74,11 +71,6 @@ def update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha):
     W2 = W2 - alpha * dW2  
     b2 = b2 - alpha * db2    
     return W1, b1, W2, b2
-
-
-
-
-
 
 def get_predictions(A2):
     return np.argmax(A2, 0)
@@ -95,17 +87,14 @@ def gradient_descent(X, Y, alpha, iterations):
         dW1, db1, dW2, db2 = backward_prop(Z1, A1, Z2, A2, W1, W2, X, Y)
         W1, b1, W2, b2 = update_params(W1, b1, W2, b2, dW1, db1, dW2, db2, alpha)
         if i % 10 == 0:
+            st = time.time()
             print("Iteration: ", i)
             predictions = get_predictions(A2)
             print(get_accuracy(predictions, Y))
+            print(time.time() - st)
     return W1, b1, W2, b2
 
-
 W1, b1, W2, b2 = gradient_descent(X_train, Y_train, 0.10, 500)
-
-
-
-
 
 def make_predictions(X, W1, b1, W2, b2):
     _, _, _, A2 = forward_prop(W1, b1, W2, b2, X)
@@ -124,7 +113,4 @@ def test_prediction(index, W1, b1, W2, b2):
     plt.gray()
     plt.imshow(current_image, interpolation='nearest')
     plt.show()
-
-
-
 
