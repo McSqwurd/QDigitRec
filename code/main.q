@@ -116,7 +116,7 @@ gradientDescent: {[X;Y;alpha;iterations]                                        
 show "Starting NN Training.";
 
 start_time: .z.T;
-trainedParams: gradientDescent[xTrainMat; yTrain; 0.10; 50];
+trainedParams: gradientDescent[xTrainMat; yTrain; 0.10; 300];
 elapsed: .z.T - start_time;
 show "Training completed in ", (string elapsed), " s";
 
