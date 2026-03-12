@@ -11,6 +11,8 @@ system "S ",string `int$.z.t;                                                   
 loadIn:{[x] n:count "," vs first read0 x; (n#"J"; enlist ",") 0: x};                     / Load CSV with auto column count
 tab:loadIn[`:../data/train.csv];                                                         / Load training data as table
 
+alphaIn:0.10                                                                             / Alpha value to be tested
+iterationsIn:300                                                                         / NUmber of iterations to do - effects accuracy 
 row:count tab;                                                                           / Number of rows in data
 colmn:count cols tab;                                                                    / Number of columns in data
 shuffle:{[t] neg[count t]?t};                                                            / Shuffle function - randomises row order
@@ -31,11 +33,11 @@ mTrain:count first xTrainMat;                                                   
 
 // NEURAL NETWORK INITIALIZATION
 initP:{[]
-    w1:(10 784 # (10*784)?1.0) - 0.5;
-    b1:(10?1.0) - 0.5;
-    w2:(10 10 # (10*10)?1.0) - 0.5;
-    b2:(10?1.0) - 0.5;
-    `w1`b1`w2`b2!(w1;b1;w2;b2)};
+    w1:(10 784 # (10*784)?1.0) - 0.5;                                                    / Weights 1
+    b1:(10?1.0) - 0.5;                                                                   / biass 1
+    w2:(10 10 # (10*10)?1.0) - 0.5;                                                      / Weights 2
+    b2:(10?1.0) - 0.5;                                                                   / Bias 2
+    `w1`b1`w2`b2!(w1;b1;w2;b2)};                                                         / Stored as dict
 
 // ACTIVATION FUNCTIONS
 ReLU: {x | 0};                                                                           / ReLU activation: max(x, 0) - introduces non-linearity
@@ -116,7 +118,7 @@ gradientDescent: {[X;Y;alpha;iterations]                                        
 show "Starting NN Training.";
 
 start_time: .z.T;
-trainedParams: gradientDescent[xTrainMat; yTrain; 0.10; 300];
+trainedParams: gradientDescent[xTrainMat; yTrain; alphaIn; iterationsIn];
 elapsed: .z.T - start_time;
 show "Training completed in ", (string elapsed), " s";
 
